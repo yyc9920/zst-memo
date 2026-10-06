@@ -3,26 +3,140 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ZST</title>
+<title>ZST: 1분 생각정리 메모</title>
+<meta name="description" content="생각이 많아 머리가 무거울 때, 제목 한 줄과 4–6줄로 1분 안에 꺼내 보세요. 하루 10장, 가입·광고 없이 메모는 내 iCloud에.">
+<link rel="canonical" href="https://yyc9920.github.io/zst-memo/">
+<meta name="apple-itunes-app" content="app-id=6812218988">
+<meta name="theme-color" content="#ece6dc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1916" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="./assets/icon-64.png">
+<link rel="apple-touch-icon" href="./assets/icon-180.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="ZST">
+<meta property="og:title" content="ZST: 1분 생각정리 메모">
+<meta property="og:description" content="1분에 한 장, 머릿속을 꺼내는 메모. 제목 한 줄과 4–6줄, 하루 10장.">
+<meta property="og:url" content="https://yyc9920.github.io/zst-memo/">
+<meta property="og:image" content="https://yyc9920.github.io/zst-memo/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ZST 쓰기 화면: 1분 타이머와 제목, 세 줄">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ZST: 1분 생각정리 메모">
+<meta name="twitter:description" content="1분에 한 장, 머릿속을 꺼내는 메모. 제목 한 줄과 4–6줄, 하루 10장.">
+<meta name="twitter:image" content="https://yyc9920.github.io/zst-memo/assets/og.png">
+
 <style>
-  :root { --bg: #fbfaf7; --ink: #1d1c1a; --sub: #6b675f; --link: #a5432f; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #171614; --ink: #ece9e2; --sub: #a29d93; --link: #e0846f; } }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.7 -apple-system, "Apple SD Gothic Neo", sans-serif; text-align: center; }
-  main { max-width: 40rem; margin: 0 auto; padding: 4rem 1rem; }
-  h1 { font-size: 2rem; margin: 0 0 .25rem; }
-  .sub { color: var(--sub); }
-  nav { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; justify-content: center; }
-  a { color: var(--link); }
+  /* 제목 글자만 남긴 고운바탕 굵게 (OFL). 다른 글은 시스템 글꼴 — 밖에서 불러오는 것은 없다. */
+  @font-face {
+    font-family: "Gowun Batang";
+    src: url("./assets/gowun-batang-bold-sub.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  :root {
+    --bg: #ece6dc; --paper: #f7f1e8; --ink: #221d18; --sub: #6f655a;
+    --line: #cfc5b6; --accent: #a64e35;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1d1916; --paper: #28221c; --ink: #efe7da; --sub: #a39888;
+      --line: #3d352c; --accent: #d9795b;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 17px/1.7 "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, sans-serif;
+    word-break: keep-all; overflow-wrap: break-word;
+  }
+  main { max-width: 44rem; margin: 0 auto; padding: 3.5rem 1rem 2.5rem; }
+  .brand { display: flex; align-items: center; gap: .75rem; color: var(--sub); font-size: .95rem; }
+  .brand img { width: 44px; height: 44px; border-radius: 10px; }
+  h1 {
+    font-family: "Gowun Batang", "AppleMyungjo", serif; font-weight: 700;
+    font-size: clamp(2rem, 7vw, 2.9rem); line-height: 1.3; letter-spacing: -.01em;
+    margin: 1.75rem 0 1rem;
+  }
+  .lead { color: var(--sub); margin: 0 0 2rem; max-width: 32rem; }
+  /* 배지: Apple 원본 그대로, 높이 48px, 둘레 여백은 배지 높이의 1/4 이상 */
+  .badge { display: inline-block; padding: 12px 0; line-height: 0; }
+  .badge img { height: 48px; width: auto; }
+  .badge .dark { display: none; }
+  @media (prefers-color-scheme: dark) {
+    .badge .light { display: none; }
+    .badge .dark { display: inline; }
+  }
+  .shots {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    margin: 3rem 0 0; padding: 0; list-style: none;
+  }
+  .shots figure { margin: 0; }
+  .shots img {
+    display: block; width: 100%; height: auto; border-radius: 14px;
+    border: 1px solid var(--line); background: var(--paper);
+  }
+  .shots figcaption { color: var(--sub); font-size: .85rem; line-height: 1.5; margin-top: .6rem; }
+  h2 { font-size: 1.05rem; margin: 3.5rem 0 .75rem; }
+  ol { margin: 0; padding-left: 1.3rem; }
+  ol li { margin: .35rem 0; }
+  ol li::marker { color: var(--accent); font-weight: 600; }
+  .facts { margin: 0; padding: 0; list-style: none; color: var(--sub); }
+  .facts li { padding: .55rem 0; border-top: 1px solid var(--line); }
+  .facts li:last-child { border-bottom: 1px solid var(--line); }
+  .source { color: var(--sub); font-size: .9rem; margin-top: 2.5rem; }
+  footer { max-width: 44rem; margin: 0 auto; padding: 0 1rem 3rem; }
+  nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; font-size: .9rem; }
+  a { color: var(--accent); }
+  .nw { white-space: nowrap; }
+  @media (max-width: 34rem) {
+    main { padding-top: 2.5rem; }
+    .shots { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+    .shots figcaption { font-size: .78rem; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <h1>ZST</h1>
-  <p class="sub">1분에 한 장, 생각을 꺼내는 메모<br>One page, one minute — get your thoughts out</p>
+  <div class="brand"><img src="./assets/icon-180.png" alt="" width="44" height="44">ZST: 1분 생각정리 메모</div>
+
+  <h1>1분에 한 장,<br>머릿속을 꺼내는 메모</h1>
+  <p class="lead">생각이 많아 머리가 무거울 때, 제목 한 줄과 <span class="nw">4–6줄</span>로 1분 안에 꺼내 보세요. 하루 10장이면 막연한 고민이 할 일로 바뀌어요.</p>
+
+  <a class="badge" href="https://apps.apple.com/kr/app/zst/id6812218988">
+    <img class="light" src="./assets/badge-black.svg" alt="App Store에서 다운로드" width="156" height="48">
+    <img class="dark" src="./assets/badge-white.svg" alt="App Store에서 다운로드" width="156" height="48">
+  </a>
+
+  <ul class="shots">
+    <li><figure><img src="./assets/shot-write.webp" alt="쓰기 화면: 1분 타이머, 제목과 세 줄" width="600" height="1304" loading="lazy"><figcaption>1분 타이머, 제목 한 줄과 <span class="nw">4–6줄</span></figcaption></figure></li>
+    <li><figure><img src="./assets/shot-today.webp" alt="오늘 화면: 10장 중 3장, 추천 제목" width="600" height="1304" loading="lazy"><figcaption>하루 10장, 막히면 제목 추천</figcaption></figure></li>
+    <li><figure><img src="./assets/shot-review.webp" alt="리뷰 화면: 3개월 전에 쓴 메모" width="600" height="1304" loading="lazy"><figcaption>3개월·6개월 뒤 다시 읽기</figcaption></figure></li>
+  </ul>
+
+  <h2>쓰는 법</h2>
+  <ol>
+    <li>지금 마음에 걸리는 것을 제목으로 적어요.</li>
+    <li>떠오르는 대로 <span class="nw">4–6줄</span>, 고치지 않고 1분 안에.</li>
+    <li>하루 10장까지. 석 달 뒤 다시 읽고 "해결됨 / 여전함"을 골라요.</li>
+  </ol>
+
+  <h2>내 메모는 내 iCloud에</h2>
+  <ul class="facts">
+    <li>가입도 서버도 없어요. 광고와 추적도 없어요.</li>
+    <li>메모는 iCloud Drive의 ZST 폴더에 텍스트 파일(.md)로 저장돼요.</li>
+    <li>기기 안 AI(Apple Intelligence)는 메모를 밖으로 보내지 않아요.</li>
+  </ul>
+
+  <p class="source">아카바 유지의 『0초 사고』에서 소개된 메모 방법을 바탕으로 만들었어요.</p>
+</main>
+<footer>
   <nav>
     <a href="./privacy.html">개인정보 처리방침 / Privacy</a>
     <a href="./support.html">지원 / Support</a>
   </nav>
-</main>
+</footer>
 </body>
 </html>
